@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 2
+Release  : 3
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
