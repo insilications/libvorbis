@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 4
+Release  : 5
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
@@ -12,6 +12,12 @@ Group    : Development/Tools
 License  : BSD-3-Clause
 Requires: libvorbis-lib
 Requires: libvorbis-doc
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
+BuildRequires : pkgconfig(32ogg)
 BuildRequires : pkgconfig(ogg)
 
 %description
@@ -27,6 +33,15 @@ Provides: libvorbis-devel
 
 %description dev
 dev components for the libvorbis package.
+
+
+%package dev32
+Summary: dev32 components for the libvorbis package.
+Group: Default
+Requires: libvorbis-lib32
+
+%description dev32
+dev32 components for the libvorbis package.
 
 
 %package doc
@@ -45,14 +60,31 @@ Group: Libraries
 lib components for the libvorbis package.
 
 
+%package lib32
+Summary: lib32 components for the libvorbis package.
+Group: Default
+
+%description lib32
+lib32 components for the libvorbis package.
+
+
 %prep
 %setup -q -n libvorbis-1.3.5
+pushd ..
+cp -a libvorbis-1.3.5 build32
+popd
 
 %build
 export LANG=C
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
+pushd ../build32/
+export CFLAGS="$CFLAGS -m32"
+export CXXFLAGS="$CXXFLAGS -m32"
+%configure --disable-static  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make V=1  %{?_smp_mflags}
+popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -62,6 +94,15 @@ make check || :
 
 %install
 rm -rf %{buildroot}
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do mv $i 32$i ; done
+popd
+fi
+popd
 %make_install
 
 %files
@@ -80,6 +121,15 @@ rm -rf %{buildroot}
 /usr/lib64/pkgconfig/vorbisfile.pc
 /usr/share/aclocal/*.m4
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libvorbis.so
+/usr/lib32/libvorbisenc.so
+/usr/lib32/libvorbisfile.so
+/usr/lib32/pkgconfig/32vorbis.pc
+/usr/lib32/pkgconfig/32vorbisenc.pc
+/usr/lib32/pkgconfig/32vorbisfile.pc
+
 %files doc
 %defattr(-,root,root,-)
 %doc /usr/share/doc/libvorbis/*
@@ -92,3 +142,12 @@ rm -rf %{buildroot}
 /usr/lib64/libvorbisenc.so.2.0.11
 /usr/lib64/libvorbisfile.so.3
 /usr/lib64/libvorbisfile.so.3.3.7
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libvorbis.so.0
+/usr/lib32/libvorbis.so.0.4.8
+/usr/lib32/libvorbisenc.so.2
+/usr/lib32/libvorbisenc.so.2.0.11
+/usr/lib32/libvorbisfile.so.3
+/usr/lib32/libvorbisfile.so.3.3.7
