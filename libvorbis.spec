@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 3
+Release  : 4
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
@@ -49,10 +49,12 @@ lib components for the libvorbis package.
 %setup -q -n libvorbis-1.3.5
 
 %build
+export LANG=C
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
 %check
+export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
@@ -70,8 +72,12 @@ rm -rf %{buildroot}
 /usr/include/vorbis/codec.h
 /usr/include/vorbis/vorbisenc.h
 /usr/include/vorbis/vorbisfile.h
-/usr/lib64/*.so
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/libvorbis.so
+/usr/lib64/libvorbisenc.so
+/usr/lib64/libvorbisfile.so
+/usr/lib64/pkgconfig/vorbis.pc
+/usr/lib64/pkgconfig/vorbisenc.pc
+/usr/lib64/pkgconfig/vorbisfile.pc
 /usr/share/aclocal/*.m4
 
 %files doc
@@ -80,4 +86,9 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libvorbis.so.0
+/usr/lib64/libvorbis.so.0.4.8
+/usr/lib64/libvorbisenc.so.2
+/usr/lib64/libvorbisenc.so.2.0.11
+/usr/lib64/libvorbisfile.so.3
+/usr/lib64/libvorbisfile.so.3.3.7
