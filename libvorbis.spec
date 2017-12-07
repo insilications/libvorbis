@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 7
+Release  : 8
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
@@ -19,6 +19,8 @@ BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : pkgconfig(32ogg)
 BuildRequires : pkgconfig(ogg)
+Patch1: cve-2017-14633.patch
+Patch2: cve-2017-14632.patch
 
 %description
 Ogg Vorbis is a fully open, non-proprietary, patent-and-royalty-free,
@@ -39,6 +41,7 @@ dev components for the libvorbis package.
 Summary: dev32 components for the libvorbis package.
 Group: Default
 Requires: libvorbis-lib32
+Requires: libvorbis-dev
 
 %description dev32
 dev32 components for the libvorbis package.
@@ -70,36 +73,49 @@ lib32 components for the libvorbis package.
 
 %prep
 %setup -q -n libvorbis-1.3.5
+%patch1 -p1
+%patch2 -p1
 pushd ..
 cp -a libvorbis-1.3.5 build32
 popd
 
 %build
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
+export SOURCE_DATE_EPOCH=1512679728
+export CFLAGS="$CFLAGS -fstack-protector-strong "
+export FCFLAGS="$CFLAGS -fstack-protector-strong "
+export FFLAGS="$CFLAGS -fstack-protector-strong "
+export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
 pushd ../build32/
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
-%configure --disable-static  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+export LDFLAGS="$LDFLAGS -m32"
+%configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make V=1  %{?_smp_mflags}
 popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
+export SOURCE_DATE_EPOCH=1512679728
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
 then
 pushd %{buildroot}/usr/lib32/pkgconfig
-for i in *.pc ; do mv $i 32$i ; done
+for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
 popd
@@ -129,6 +145,9 @@ popd
 /usr/lib32/pkgconfig/32vorbis.pc
 /usr/lib32/pkgconfig/32vorbisenc.pc
 /usr/lib32/pkgconfig/32vorbisfile.pc
+/usr/lib32/pkgconfig/vorbis.pc
+/usr/lib32/pkgconfig/vorbisenc.pc
+/usr/lib32/pkgconfig/vorbisfile.pc
 
 %files doc
 %defattr(-,root,root,-)
