@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 8
+Release  : 9
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
@@ -21,6 +21,7 @@ BuildRequires : pkgconfig(32ogg)
 BuildRequires : pkgconfig(ogg)
 Patch1: cve-2017-14633.patch
 Patch2: cve-2017-14632.patch
+Patch3: cve-2017-14160.patch
 
 %description
 Ogg Vorbis is a fully open, non-proprietary, patent-and-royalty-free,
@@ -75,6 +76,7 @@ lib32 components for the libvorbis package.
 %setup -q -n libvorbis-1.3.5
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 pushd ..
 cp -a libvorbis-1.3.5 build32
 popd
@@ -84,7 +86,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1512679728
+export SOURCE_DATE_EPOCH=1513119507
 export CFLAGS="$CFLAGS -fstack-protector-strong "
 export FCFLAGS="$CFLAGS -fstack-protector-strong "
 export FFLAGS="$CFLAGS -fstack-protector-strong "
@@ -108,7 +110,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1512679728
+export SOURCE_DATE_EPOCH=1513119507
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
