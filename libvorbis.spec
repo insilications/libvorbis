@@ -4,13 +4,14 @@
 #
 Name     : libvorbis
 Version  : 1.3.5
-Release  : 9
+Release  : 10
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
 Summary  : Vorbis Library Development
 Group    : Development/Tools
 License  : BSD-3-Clause
 Requires: libvorbis-lib
+Requires: libvorbis-data
 Requires: libvorbis-doc
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -28,10 +29,19 @@ Ogg Vorbis is a fully open, non-proprietary, patent-and-royalty-free,
 general-purpose compressed audio format for audio and music at fixed 
 and variable bitrates from 16 to 128 kbps/channel.
 
+%package data
+Summary: data components for the libvorbis package.
+Group: Data
+
+%description data
+data components for the libvorbis package.
+
+
 %package dev
 Summary: dev components for the libvorbis package.
 Group: Development
 Requires: libvorbis-lib
+Requires: libvorbis-data
 Provides: libvorbis-devel
 
 %description dev
@@ -42,6 +52,7 @@ dev components for the libvorbis package.
 Summary: dev32 components for the libvorbis package.
 Group: Default
 Requires: libvorbis-lib32
+Requires: libvorbis-data
 Requires: libvorbis-dev
 
 %description dev32
@@ -59,6 +70,7 @@ doc components for the libvorbis package.
 %package lib
 Summary: lib components for the libvorbis package.
 Group: Libraries
+Requires: libvorbis-data
 
 %description lib
 lib components for the libvorbis package.
@@ -67,6 +79,7 @@ lib components for the libvorbis package.
 %package lib32
 Summary: lib32 components for the libvorbis package.
 Group: Default
+Requires: libvorbis-data
 
 %description lib32
 lib32 components for the libvorbis package.
@@ -80,19 +93,25 @@ lib32 components for the libvorbis package.
 pushd ..
 cp -a libvorbis-1.3.5 build32
 popd
+pushd ..
+cp -a libvorbis-1.3.5 buildavx2
+popd
+pushd ..
+cp -a libvorbis-1.3.5 buildavx512
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1513119507
+export SOURCE_DATE_EPOCH=1514688206
 export CFLAGS="$CFLAGS -fstack-protector-strong "
 export FCFLAGS="$CFLAGS -fstack-protector-strong "
 export FFLAGS="$CFLAGS -fstack-protector-strong "
 export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
 %configure --disable-static
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -100,7 +119,21 @@ export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
+popd
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=haswell"
+export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
+export LDFLAGS="$LDFLAGS -m64 -march=haswell"
+%configure --disable-static    --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+make  %{?_smp_mflags}
+popd
+pushd ../buildavx512/
+export CFLAGS="$CFLAGS -m64 -march=skylake-avx512"
+export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512"
+export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
+%configure --disable-static    --libdir=/usr/lib64/haswell/avx512_1 --bindir=/usr/bin/haswell/avx512_1
+make  %{?_smp_mflags}
 popd
 %check
 export LANG=C
@@ -110,7 +143,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1513119507
+export SOURCE_DATE_EPOCH=1514688206
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -121,16 +154,170 @@ for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
 popd
+pushd ../buildavx2/
+%make_install
+popd
+pushd ../buildavx512/
+%make_install
+popd
 %make_install
 
 %files
 %defattr(-,root,root,-)
+/usr/lib64/haswell/avx512_1/pkgconfig/vorbis.pc
+/usr/lib64/haswell/avx512_1/pkgconfig/vorbisenc.pc
+/usr/lib64/haswell/avx512_1/pkgconfig/vorbisfile.pc
+/usr/lib64/haswell/pkgconfig/vorbis.pc
+/usr/lib64/haswell/pkgconfig/vorbisenc.pc
+/usr/lib64/haswell/pkgconfig/vorbisfile.pc
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/doc/libvorbis-1.3.5/doxygen-build.stamp
+/usr/share/doc/libvorbis-1.3.5/eightphase.png
+/usr/share/doc/libvorbis-1.3.5/fish_xiph_org.png
+/usr/share/doc/libvorbis-1.3.5/floor1_inverse_dB_table.html
+/usr/share/doc/libvorbis-1.3.5/floorval.png
+/usr/share/doc/libvorbis-1.3.5/fourphase.png
+/usr/share/doc/libvorbis-1.3.5/framing.html
+/usr/share/doc/libvorbis-1.3.5/helper.html
+/usr/share/doc/libvorbis-1.3.5/index.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/index.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/overview.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/reference.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/return.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/style.css
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis_blockout.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis_buffer.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis_headerout.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis_init.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_analysis_wrote.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_bitrate_addblock.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_bitrate_flushpacket.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_block.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_block_clear.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_block_init.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_add.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_add_tag.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_clear.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_init.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_query.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_comment_query_count.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_commentheader_out.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_dsp_clear.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_dsp_state.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_granule_time.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_info.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_info_blocksize.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_info_clear.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_info_init.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_packet_blocksize.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_blockin.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_halfrate.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_halfrate_p.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_headerin.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_idheader.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_init.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_lapout.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_pcmout.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_read.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_restart.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_synthesis_trackonly.html
+/usr/share/doc/libvorbis-1.3.5/libvorbis/vorbis_version_string.html
+/usr/share/doc/libvorbis-1.3.5/oggstream.html
+/usr/share/doc/libvorbis-1.3.5/programming.html
+/usr/share/doc/libvorbis-1.3.5/rfc5215.txt
+/usr/share/doc/libvorbis-1.3.5/rfc5215.xml
+/usr/share/doc/libvorbis-1.3.5/squarepolar.png
+/usr/share/doc/libvorbis-1.3.5/stereo.html
+/usr/share/doc/libvorbis-1.3.5/stream.png
+/usr/share/doc/libvorbis-1.3.5/v-comment.html
+/usr/share/doc/libvorbis-1.3.5/vorbis-clip.txt
+/usr/share/doc/libvorbis-1.3.5/vorbis-errors.txt
+/usr/share/doc/libvorbis-1.3.5/vorbis-fidelity.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/changes.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/examples.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/index.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/ovectl_ratemanage2_arg.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/ovectl_ratemanage_arg.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/overview.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/reference.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/style.css
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_ctl.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_init.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_init_vbr.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_setup_init.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_setup_managed.html
+/usr/share/doc/libvorbis-1.3.5/vorbisenc/vorbis_encode_setup_vbr.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/OggVorbis_File.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/callbacks.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/chaining_example_c.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/chainingexample.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/crosslap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/datastructures.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/decoding.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/example.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/exampleindex.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/fileinfo.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/index.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/initialization.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_bitrate.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_bitrate_instant.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_callbacks.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_clear.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_comment.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_crosslap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_fopen.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_info.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_open.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_open_callbacks.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_seek.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_seek_lap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_seek_page.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_seek_page_lap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_tell.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_pcm_total.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_raw_seek.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_raw_seek_lap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_raw_tell.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_raw_total.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_read.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_read_filter.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_read_float.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_seekable.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_serialnumber.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_streams.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_test.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_test_callbacks.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_test_open.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_seek.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_seek_lap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_seek_page.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_seek_page_lap.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_tell.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/ov_time_total.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/overview.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/reference.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/seekexample.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/seeking.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/seeking_example_c.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/seeking_test_c.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/seekingexample.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/style.css
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/threads.html
+/usr/share/doc/libvorbis-1.3.5/vorbisfile/vorbisfile_example_c.html
 
 %files dev
 %defattr(-,root,root,-)
 /usr/include/vorbis/codec.h
 /usr/include/vorbis/vorbisenc.h
 /usr/include/vorbis/vorbisfile.h
+/usr/lib64/haswell/libvorbis.so
+/usr/lib64/haswell/libvorbisenc.so
+/usr/lib64/haswell/libvorbisfile.so
 /usr/lib64/libvorbis.so
 /usr/lib64/libvorbisenc.so
 /usr/lib64/libvorbisfile.so
@@ -157,6 +344,21 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/avx512_1/libvorbis.so
+/usr/lib64/haswell/avx512_1/libvorbis.so.0
+/usr/lib64/haswell/avx512_1/libvorbis.so.0.4.8
+/usr/lib64/haswell/avx512_1/libvorbisenc.so
+/usr/lib64/haswell/avx512_1/libvorbisenc.so.2
+/usr/lib64/haswell/avx512_1/libvorbisenc.so.2.0.11
+/usr/lib64/haswell/avx512_1/libvorbisfile.so
+/usr/lib64/haswell/avx512_1/libvorbisfile.so.3
+/usr/lib64/haswell/avx512_1/libvorbisfile.so.3.3.7
+/usr/lib64/haswell/libvorbis.so.0
+/usr/lib64/haswell/libvorbis.so.0.4.8
+/usr/lib64/haswell/libvorbisenc.so.2
+/usr/lib64/haswell/libvorbisenc.so.2.0.11
+/usr/lib64/haswell/libvorbisfile.so.3
+/usr/lib64/haswell/libvorbisfile.so.3.3.7
 /usr/lib64/libvorbis.so.0
 /usr/lib64/libvorbis.so.0.4.8
 /usr/lib64/libvorbisenc.so.2
