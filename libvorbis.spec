@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.6
-Release  : 14
+Release  : 15
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Summary  : Vorbis Library Development
@@ -86,11 +86,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1522116857
-export CFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs "
-export FCFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs "
-export FFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs "
-export CXXFLAGS="$CXXFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs "
+export SOURCE_DATE_EPOCH=1526010842
+export CFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export FCFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export FFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -107,13 +107,13 @@ pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
-%configure --disable-static    --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+%configure --disable-static    --libdir=/usr/lib64/haswell
 make  %{?_smp_mflags}
 popd
 unset PKG_CONFIG_PATH
 pushd ../buildavx512/
-export CFLAGS="$CFLAGS -m64 -march=skylake-avx512"
-export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512"
+export CFLAGS="$CFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
 export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
 %configure --disable-static    --libdir=/usr/lib64/haswell/avx512_1 --bindir=/usr/bin/haswell/avx512_1
 make  %{?_smp_mflags}
@@ -126,7 +126,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1522116857
+export SOURCE_DATE_EPOCH=1526010842
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -147,9 +147,6 @@ popd
 
 %files
 %defattr(-,root,root,-)
-/usr/lib64/haswell/avx512_1/pkgconfig/vorbis.pc
-/usr/lib64/haswell/avx512_1/pkgconfig/vorbisenc.pc
-/usr/lib64/haswell/avx512_1/pkgconfig/vorbisfile.pc
 
 %files dev
 %defattr(-,root,root,-)
