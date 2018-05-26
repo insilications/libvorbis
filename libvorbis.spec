@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.6
-Release  : 15
+Release  : 16
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Summary  : Vorbis Library Development
@@ -19,6 +19,8 @@ BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : pkgconfig(32ogg)
 BuildRequires : pkgconfig(ogg)
+Patch1: cve-2018-10392.patch
+Patch2: cve-2018-10393.patch
 
 %description
 Ogg Vorbis is a fully open, non-proprietary, patent-and-royalty-free,
@@ -71,6 +73,8 @@ lib32 components for the libvorbis package.
 
 %prep
 %setup -q -n libvorbis-1.3.6
+%patch1 -p1
+%patch2 -p1
 pushd ..
 cp -a libvorbis-1.3.6 build32
 popd
@@ -86,7 +90,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1526010842
+export SOURCE_DATE_EPOCH=1527339648
 export CFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
@@ -102,18 +106,16 @@ export LDFLAGS="$LDFLAGS -m32"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
-unset PKG_CONFIG_PATH
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
-%configure --disable-static    --libdir=/usr/lib64/haswell
+%configure --disable-static    --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
 make  %{?_smp_mflags}
 popd
-unset PKG_CONFIG_PATH
 pushd ../buildavx512/
-export CFLAGS="$CFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
-export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export CFLAGS="$CFLAGS -m64 -march=skylake-avx512"
+export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512"
 export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
 %configure --disable-static    --libdir=/usr/lib64/haswell/avx512_1 --bindir=/usr/bin/haswell/avx512_1
 make  %{?_smp_mflags}
@@ -126,7 +128,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1526010842
+export SOURCE_DATE_EPOCH=1527339648
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
