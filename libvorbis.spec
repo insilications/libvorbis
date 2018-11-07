@@ -4,19 +4,20 @@
 #
 Name     : libvorbis
 Version  : 1.3.6
-Release  : 16
+Release  : 17
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Summary  : Vorbis Library Development
 Group    : Development/Tools
 License  : BSD-3-Clause
-Requires: libvorbis-lib
-Requires: libvorbis-doc
+Requires: libvorbis-lib = %{version}-%{release}
+Requires: libvorbis-license = %{version}-%{release}
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : pkg-config
 BuildRequires : pkgconfig(32ogg)
 BuildRequires : pkgconfig(ogg)
 Patch1: cve-2018-10392.patch
@@ -30,8 +31,8 @@ and variable bitrates from 16 to 128 kbps/channel.
 %package dev
 Summary: dev components for the libvorbis package.
 Group: Development
-Requires: libvorbis-lib
-Provides: libvorbis-devel
+Requires: libvorbis-lib = %{version}-%{release}
+Provides: libvorbis-devel = %{version}-%{release}
 
 %description dev
 dev components for the libvorbis package.
@@ -40,8 +41,8 @@ dev components for the libvorbis package.
 %package dev32
 Summary: dev32 components for the libvorbis package.
 Group: Default
-Requires: libvorbis-lib32
-Requires: libvorbis-dev
+Requires: libvorbis-lib32 = %{version}-%{release}
+Requires: libvorbis-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the libvorbis package.
@@ -58,6 +59,7 @@ doc components for the libvorbis package.
 %package lib
 Summary: lib components for the libvorbis package.
 Group: Libraries
+Requires: libvorbis-license = %{version}-%{release}
 
 %description lib
 lib components for the libvorbis package.
@@ -66,9 +68,18 @@ lib components for the libvorbis package.
 %package lib32
 Summary: lib32 components for the libvorbis package.
 Group: Default
+Requires: libvorbis-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the libvorbis package.
+
+
+%package license
+Summary: license components for the libvorbis package.
+Group: Default
+
+%description license
+license components for the libvorbis package.
 
 
 %prep
@@ -90,7 +101,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1527339648
+export SOURCE_DATE_EPOCH=1541615945
 export CFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
@@ -100,24 +111,27 @@ make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="$ASFLAGS --32"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
+unset PKG_CONFIG_PATH
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
-%configure --disable-static    --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+%configure --disable-static
 make  %{?_smp_mflags}
 popd
+unset PKG_CONFIG_PATH
 pushd ../buildavx512/
-export CFLAGS="$CFLAGS -m64 -march=skylake-avx512"
-export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512"
+export CFLAGS="$CFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
 export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
-%configure --disable-static    --libdir=/usr/lib64/haswell/avx512_1 --bindir=/usr/bin/haswell/avx512_1
+%configure --disable-static
 make  %{?_smp_mflags}
 popd
 %check
@@ -128,8 +142,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1527339648
+export SOURCE_DATE_EPOCH=1541615945
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/libvorbis
+cp COPYING %{buildroot}/usr/share/package-licenses/libvorbis/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -139,11 +155,11 @@ for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
 popd
-pushd ../buildavx2/
-%make_install
-popd
 pushd ../buildavx512/
-%make_install
+%make_install_avx512
+popd
+pushd ../buildavx2/
+%make_install_avx2
 popd
 %make_install
 
@@ -155,6 +171,9 @@ popd
 /usr/include/vorbis/codec.h
 /usr/include/vorbis/vorbisenc.h
 /usr/include/vorbis/vorbisfile.h
+/usr/lib64/haswell/avx512_1/libvorbis.so
+/usr/lib64/haswell/avx512_1/libvorbisenc.so
+/usr/lib64/haswell/avx512_1/libvorbisfile.so
 /usr/lib64/haswell/libvorbis.so
 /usr/lib64/haswell/libvorbisenc.so
 /usr/lib64/haswell/libvorbisfile.so
@@ -179,7 +198,7 @@ popd
 /usr/lib32/pkgconfig/vorbisfile.pc
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc /usr/share/doc/libvorbis/*
 /usr/share/doc/libvorbis-1.3.6/doxygen-build.stamp
 /usr/share/doc/libvorbis-1.3.6/eightphase.png
@@ -320,13 +339,10 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/avx512_1/libvorbis.so
 /usr/lib64/haswell/avx512_1/libvorbis.so.0
 /usr/lib64/haswell/avx512_1/libvorbis.so.0.4.8
-/usr/lib64/haswell/avx512_1/libvorbisenc.so
 /usr/lib64/haswell/avx512_1/libvorbisenc.so.2
 /usr/lib64/haswell/avx512_1/libvorbisenc.so.2.0.11
-/usr/lib64/haswell/avx512_1/libvorbisfile.so
 /usr/lib64/haswell/avx512_1/libvorbisfile.so.3
 /usr/lib64/haswell/avx512_1/libvorbisfile.so.3.3.7
 /usr/lib64/haswell/libvorbis.so.0
@@ -350,3 +366,7 @@ popd
 /usr/lib32/libvorbisenc.so.2.0.11
 /usr/lib32/libvorbisfile.so.3
 /usr/lib32/libvorbisfile.so.3.3.7
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libvorbis/COPYING
