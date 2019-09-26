@@ -4,7 +4,7 @@
 #
 Name     : libvorbis
 Version  : 1.3.6
-Release  : 18
+Release  : 19
 URL      : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Source0  : http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
 Summary  : Vorbis Library Development
@@ -33,6 +33,7 @@ Summary: dev components for the libvorbis package.
 Group: Development
 Requires: libvorbis-lib = %{version}-%{release}
 Provides: libvorbis-devel = %{version}-%{release}
+Requires: libvorbis = %{version}-%{release}
 
 %description dev
 dev components for the libvorbis package.
@@ -100,21 +101,25 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1541615945
-export CFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
-export FCFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
-export FFLAGS="$CFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
-export CXXFLAGS="$CXXFLAGS -ffast-math -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1569532907
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffast-math -ffat-lto-objects -flto=4 -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export FCFLAGS="$CFLAGS -O3 -ffast-math -ffat-lto-objects -flto=4 -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export FFLAGS="$CFLAGS -O3 -ffast-math -ffat-lto-objects -flto=4 -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -O3 -ffast-math -ffat-lto-objects -flto=4 -fstack-protector-strong -ftree-loop-vectorize -mzero-caller-saved-regs=used "
 %configure --disable-static
 make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export ASFLAGS="$ASFLAGS --32"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
@@ -135,14 +140,14 @@ export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
 make  %{?_smp_mflags}
 popd
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1541615945
+export SOURCE_DATE_EPOCH=1569532907
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libvorbis
 cp COPYING %{buildroot}/usr/share/package-licenses/libvorbis/COPYING
