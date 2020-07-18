@@ -1,5 +1,5 @@
 PKG_NAME := libvorbis
-URL = http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz
+URL = https://github.com/xiph/vorbis.git
 ARCHIVES = 
 
 include ../common/Makefile.common
