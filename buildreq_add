@@ -1,2 +1,10 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
+buildreq-cmake
+gcc-dev32
+gcc-libgcc32
+gcc-libstdc++32
+glibc-dev32
+glibc-libc32
+pkg-config
+findutils
