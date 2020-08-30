@@ -8,3 +8,6 @@ glibc-dev32
 glibc-libc32
 pkg-config
 findutils
+glibc-locale
+gperf
+texinfo
