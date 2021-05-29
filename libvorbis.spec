@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : libvorbis
 Version  : 1.3.7
-Release  : 301
+Release  : 310
 URL      : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-v1.3.7.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-v1.3.7.tar.gz
 Summary  : vorbisfile is a library that provides a convenient high-level API for decoding and basic manipulation of all Vorbis I audio streams
@@ -118,7 +118,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1622248872
+export SOURCE_DATE_EPOCH=1622254346
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -174,7 +174,7 @@ export CXXFLAGS="${CXXFLAGS_GENERATE}"
 export FFLAGS="${FFLAGS_GENERATE}"
 export FCFLAGS="${FCFLAGS_GENERATE}"
 export LDFLAGS="${LDFLAGS_GENERATE}"
-%autogen
+%autogen  --enable-shared --enable-static
 make  %{?_smp_mflags}    V=1 VERBOSE=1
 
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
@@ -183,6 +183,12 @@ echo USED > statuspgo
 fi
 if [ -f statuspgo ]; then
 echo PGO Phase 2
+export CFLAGS="${CFLAGS_USE}"
+export CXXFLAGS="${CXXFLAGS_USE}"
+export FFLAGS="${FFLAGS_USE}"
+export FCFLAGS="${FCFLAGS_USE}"
+export LDFLAGS="${LDFLAGS_USE}"
+%autogen  --enable-shared --enable-static
 make  %{?_smp_mflags}    V=1 VERBOSE=1
 fi
 
@@ -204,7 +210,7 @@ make  %{?_smp_mflags}    V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1622248872
+export SOURCE_DATE_EPOCH=1622254346
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
