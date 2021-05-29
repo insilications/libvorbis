@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : libvorbis
-Version  : 4
-Release  : 25
-URL      : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-4.tar.gz
-Source0  : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-4.tar.gz
+Version  : 1.3.7
+Release  : 301
+URL      : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-v1.3.7.tar.gz
+Source0  : file:///aot/build/clearlinux/packages/libvorbis/libvorbis-v1.3.7.tar.gz
 Summary  : vorbisfile is a library that provides a convenient high-level API for decoding and basic manipulation of all Vorbis I audio streams
 Group    : Development/Tools
 License  : LGPL-3.0-or-later
@@ -118,7 +118,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1620556589
+export SOURCE_DATE_EPOCH=1622248872
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -133,13 +133,13 @@ export CXXFLAGS_GENERATE="-g -O3 --param=lto-max-streaming-parallelism=16 -march
 export LDFLAGS_GENERATE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -falign-functions=32 -flimit-function-alignment -fno-semantic-interposition -fno-stack-protector -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -mtls-dialect=gnu2 -fno-math-errno -fno-trapping-math -pipe -ffat-lto-objects -flto=16 -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -lpthread -Wl,--build-id=sha1 -fdevirtualize-at-ltrans -Wl,-z,now -Wl,-z,relro -Wl,-sort-common -fasynchronous-unwind-tables $PGO_GEN"
 ## pgo use
 ## -ffat-lto-objects -fno-PIE -fno-PIE -m64 -no-pie -fPIC -Wl,-z,max-page-size=0x1000 -fvisibility=hidden -flto-partition=none
-## gcc: -feliminate-unused-debug-types -fipa-pta -flto=16 -Wno-error -Wp,-D_REENTRANT -fno-common
+## gcc: -feliminate-unused-debug-types -fipa-pta -flto=16 -Wno-error -Wp,-D_REENTRANT -fno-common -funroll-loops
 export PGO_USE="-fprofile-use=/var/tmp/pgo -fprofile-dir=/var/tmp/pgo -fprofile-abs-path -fprofile-correction -fprofile-partial-training"
-export CFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
-export FCFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
-export FFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
-export CXXFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -fvisibility-inlines-hidden -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
-export LDFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -lpthread $PGO_USE"
+export CFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
+export FCFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
+export FFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
+export CXXFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -fvisibility-inlines-hidden -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc $PGO_USE"
+export LDFLAGS_USE="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -lpthread $PGO_USE"
 #
 export AR=/usr/bin/gcc-ar
 export RANLIB=/usr/bin/gcc-ranlib
@@ -165,23 +165,26 @@ export CCACHE_BASEDIR=/builddir/build/BUILD
 #export CCACHE_DEBUG=true
 #export CCACHE_NODIRECT=true
 ## altflags_pgo end
+sd -r '\s--dirty\s' ' ' .
+sd -r 'git describe' 'git describe --abbrev=0' .
+if [ ! -f statuspgo ]; then
+echo PGO Phase 1
 export CFLAGS="${CFLAGS_GENERATE}"
 export CXXFLAGS="${CXXFLAGS_GENERATE}"
 export FFLAGS="${FFLAGS_GENERATE}"
 export FCFLAGS="${FCFLAGS_GENERATE}"
 export LDFLAGS="${LDFLAGS_GENERATE}"
 %autogen
-make  %{?_smp_mflags}
+make  %{?_smp_mflags}    V=1 VERBOSE=1
 
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 make clean
-export CFLAGS="${CFLAGS_USE}"
-export CXXFLAGS="${CXXFLAGS_USE}"
-export FFLAGS="${FFLAGS_USE}"
-export FCFLAGS="${FCFLAGS_USE}"
-export LDFLAGS="${LDFLAGS_USE}"
-%autogen
-make  %{?_smp_mflags}
+echo USED > statuspgo
+fi
+if [ -f statuspgo ]; then
+echo PGO Phase 2
+make  %{?_smp_mflags}    V=1 VERBOSE=1
+fi
 
 pushd ../build32/
 export CFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -m32 -mstackrealign -march=native -mtune=native"
@@ -197,11 +200,11 @@ export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %autogen   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make  %{?_smp_mflags}
+make  %{?_smp_mflags}    V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1620556589
+export SOURCE_DATE_EPOCH=1622248872
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -213,6 +216,10 @@ then
 fi
 popd
 %make_install
+## install_append content
+install -dm 0755 %{buildroot}/usr/lib64/haswell/ || :
+cp --archive %{buildroot}/usr/lib64/lib*.so* %{buildroot}/usr/lib64/haswell/ || :
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -222,6 +229,9 @@ popd
 /usr/include/vorbis/codec.h
 /usr/include/vorbis/vorbisenc.h
 /usr/include/vorbis/vorbisfile.h
+/usr/lib64/haswell/libvorbis.so
+/usr/lib64/haswell/libvorbisenc.so
+/usr/lib64/haswell/libvorbisfile.so
 /usr/lib64/libvorbis.so
 /usr/lib64/libvorbisenc.so
 /usr/lib64/libvorbisfile.so
@@ -244,145 +254,16 @@ popd
 
 %files doc
 %defattr(0644,root,root,0755)
-/usr/share/doc/libvorbis-1.3.7/doxygen-build.stamp
-/usr/share/doc/libvorbis-1.3.7/eightphase.png
-/usr/share/doc/libvorbis-1.3.7/fish_xiph_org.png
-/usr/share/doc/libvorbis-1.3.7/floor1_inverse_dB_table.html
-/usr/share/doc/libvorbis-1.3.7/floorval.png
-/usr/share/doc/libvorbis-1.3.7/fourphase.png
-/usr/share/doc/libvorbis-1.3.7/framing.html
-/usr/share/doc/libvorbis-1.3.7/helper.html
-/usr/share/doc/libvorbis-1.3.7/index.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/index.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/overview.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/reference.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/return.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/style.css
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis_blockout.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis_buffer.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis_headerout.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis_init.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_analysis_wrote.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_bitrate_addblock.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_bitrate_flushpacket.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_block.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_block_clear.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_block_init.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_add.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_add_tag.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_clear.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_init.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_query.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_comment_query_count.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_commentheader_out.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_dsp_clear.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_dsp_state.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_granule_time.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_info.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_info_blocksize.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_info_clear.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_info_init.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_packet_blocksize.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_blockin.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_halfrate.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_halfrate_p.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_headerin.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_idheader.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_init.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_lapout.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_pcmout.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_read.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_restart.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_synthesis_trackonly.html
-/usr/share/doc/libvorbis-1.3.7/libvorbis/vorbis_version_string.html
-/usr/share/doc/libvorbis-1.3.7/oggstream.html
-/usr/share/doc/libvorbis-1.3.7/programming.html
-/usr/share/doc/libvorbis-1.3.7/rfc5215.txt
-/usr/share/doc/libvorbis-1.3.7/rfc5215.xml
-/usr/share/doc/libvorbis-1.3.7/squarepolar.png
-/usr/share/doc/libvorbis-1.3.7/stereo.html
-/usr/share/doc/libvorbis-1.3.7/stream.png
-/usr/share/doc/libvorbis-1.3.7/v-comment.html
-/usr/share/doc/libvorbis-1.3.7/vorbis-clip.txt
-/usr/share/doc/libvorbis-1.3.7/vorbis-errors.txt
-/usr/share/doc/libvorbis-1.3.7/vorbis-fidelity.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/changes.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/examples.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/index.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/ovectl_ratemanage2_arg.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/ovectl_ratemanage_arg.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/overview.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/reference.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/style.css
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_ctl.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_init.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_init_vbr.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_setup_init.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_setup_managed.html
-/usr/share/doc/libvorbis-1.3.7/vorbisenc/vorbis_encode_setup_vbr.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/OggVorbis_File.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/callbacks.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/chaining_example_c.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/chainingexample.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/crosslap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/datastructures.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/decoding.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/example.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/exampleindex.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/fileinfo.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/index.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/initialization.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_bitrate.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_bitrate_instant.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_callbacks.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_clear.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_comment.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_crosslap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_fopen.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_info.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_open.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_open_callbacks.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_seek.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_seek_lap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_seek_page.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_seek_page_lap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_tell.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_pcm_total.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_raw_seek.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_raw_seek_lap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_raw_tell.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_raw_total.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_read.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_read_filter.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_read_float.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_seekable.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_serialnumber.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_streams.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_test.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_test_callbacks.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_test_open.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_seek.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_seek_lap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_seek_page.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_seek_page_lap.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_tell.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/ov_time_total.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/overview.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/reference.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/seekexample.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/seeking.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/seeking_example_c.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/seeking_test_c.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/seekingexample.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/style.css
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/threads.html
-/usr/share/doc/libvorbis-1.3.7/vorbisfile/vorbisfile_example_c.html
+%doc /usr/share/doc/libvorbis/*
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/libvorbis.so.0
+/usr/lib64/haswell/libvorbis.so.0.4.9
+/usr/lib64/haswell/libvorbisenc.so.2
+/usr/lib64/haswell/libvorbisenc.so.2.0.12
+/usr/lib64/haswell/libvorbisfile.so.3
+/usr/lib64/haswell/libvorbisfile.so.3.3.8
 /usr/lib64/libvorbis.so.0
 /usr/lib64/libvorbis.so.0.4.9
 /usr/lib64/libvorbisenc.so.2
