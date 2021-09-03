@@ -1,1 +1,1 @@
-make VERBOSE=1 V=1 %{?_smp_mflags} check || : 
+make -j1 check VERBOSE=1 V=1 || :
