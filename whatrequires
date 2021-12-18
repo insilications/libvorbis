@@ -1,1 +1,22 @@
 # This file contains recursive sources that require this package
+MuseScore
+SDL2_mixer
+SDL_mixer
+SFML
+SFML-dev
+audacious-plugins
+cmus
+etr
+gst-plugins-base
+libcanberra
+libsndfile
+libtheora
+libvorbis-dev
+libvorbis-dev32
+minetest
+mlt
+not-ffmpeg
+scummvm
+sox
+supertuxkart
+vlc
