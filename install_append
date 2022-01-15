@@ -1,2 +1,6 @@
 install -dm 0755 %{buildroot}/usr/lib64/haswell/ || :
-cp --archive %{buildroot}/usr/lib64/lib*.so* %{buildroot}/usr/lib64/haswell/ || :
+pushd %{buildroot}/usr/lib64/haswell/
+for lib in ../lib*.so*; do
+    ln -sf $lib %{buildroot}/usr/lib64/haswell/;
+done
+popd
