@@ -1,4 +1,4 @@
---disable-shared
---enable-static
+--enable-shared
+--disable-static
 --enable-examples
 --enable-oggtest
